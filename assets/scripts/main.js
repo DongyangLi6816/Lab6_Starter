@@ -68,47 +68,32 @@ function initFormHandler() {
   const form = document.querySelector('form');
   
   
-  form.addEventListener('submit', (event) => {
-    // Prevent the form from submitting normally
+  form.addEventListener('submit', event => {
     event.preventDefault();
 
-    
-    const formData = new FormData(form);
+    const formData = new FormData(event.target);
 
-    
-    let recipeObject = {};
+    const recipeObject = Object.fromEntries(formData.entries());
 
-    
-    for(let pair of formData.entries()) {
-      recipeObject[pair[0]] = pair[1];
-    }
-    
     const recipeCard = document.createElement('recipe-card');
 
-    
     recipeCard.data = recipeObject;
 
-   
-    document.querySelector('main').appendChild(recipeCard);
+    const main = document.querySelector('main');
+    main.appendChild(recipeCard);
 
-    
-    let recipes = getRecipesFromStorage();
-
-    
+    const recipes = getRecipesFromStorage();
     recipes.push(recipeObject);
-
-   
     saveRecipesToStorage(recipes);
   });
 
 
-  const clearBtn = document.querySelector('#clear-button');
+  let clearButton = document.querySelector('button[type="button"]');
 
-  clearBtn.addEventListener('click', () => {
-    localStorage.clear();
-
-    document.querySelector('main').innerHTML = '';
-  });
+clearButton.addEventListener('click', function() {
+  localStorage.clear();
+  document.querySelector('main').innerHTML = '';
+});
   
 
 }
